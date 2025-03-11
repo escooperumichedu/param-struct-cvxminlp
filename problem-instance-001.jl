@@ -3,6 +3,8 @@
 using JuMP, AmplNLWriter
 import Bonmin_jll
 
+global time_limit = 0.1
+
 println("
 ******************************************************************************
 ******************************************************************************
@@ -16,6 +18,7 @@ function problem_instance(solver)
 
     m = Model(() -> AmplNLWriter.Optimizer(Bonmin_jll.amplexe))
     set_optimizer_attribute(m, "bonmin.algorithm", solver)
+    set_optimizer_attribute(m, "bonmin.time_limit", time_limit)
 
     # ----- Variables ----- #
     @variable(m, objvar)
@@ -28,7 +31,7 @@ function problem_instance(solver)
     # ----- Constraints ----- #
     @constraint(m, e1, x[1] + x[2] + x[3] + x[4] == 1.0)
     @constraint(m, e2, 8 * x[1] + 9 * x[2] + 12 * x[3] + 7 * x[4] == 10.0)
-    @NLconstraint(m, e3, x[1] * (4 * x[1] + 3 * x[2] - x[3]) + x[2] * (3 * x[1] + 6 * x[2] + x[3]) + x[3] * (x[2] - x[1] + 10 * x[3]) - objvar == 0.0)
+    @NLconstraint(m, e3, x[1] * (4 * x[1] + 3 * x[2] - x[3]) + x[2] * (3 * x[1] + 6 * x[2] + x[3]) + x[3] * (x[2] - x[1] + 10 * x[3]) == objvar)
     @constraint(m, e4, x[1] - b[6] <= 0.0)
     @constraint(m, e5, x[2] - b[7] <= 0.0)
     @constraint(m, e6, x[3] - b[8] <= 0.0)
@@ -59,6 +62,7 @@ function adj_problem_instance(solver)
 
     m = Model(() -> AmplNLWriter.Optimizer(Bonmin_jll.amplexe))
     set_optimizer_attribute(m, "bonmin.algorithm", solver)
+    set_optimizer_attribute(m, "bonmin.time_limit", time_limit)
 
     # ----- Variables ----- #
     @variable(m, objvar)
@@ -70,11 +74,11 @@ function adj_problem_instance(solver)
 
     # ----- Constraints ----- #
     @constraint(m, e1, x[1] + x[2] + x[3] + x[4] == 1.0)
-    @constraint(m, e2, 8 * x[1] + 9 * x[2] + 12 * x[3] + 7 * x[4] == 8.0)
-    @NLconstraint(m, e3, x[1] * (4 * x[1] + 3 * x[2] - x[3]) + x[2] * (3 * x[1] + 6 * x[2] + x[3]) + x[3] * (x[2] - x[1] + 10 * x[3]) - objvar == 0.0)
-    @constraint(m, e4, x[1] - b[6] <= 5.0)
+    @constraint(m, e2, 8 * x[1] + 9 * x[2] + 12 * x[3] + 7 * x[4] == 9.0)
+    @NLconstraint(m, e3, x[1] * (4 * x[1] + 3 * x[2] - x[3]) + x[2] * (3 * x[1] + 6 * x[2] + x[3]) + x[3] * (x[2] - x[1] + 10 * x[3]) == objvar)
+    @constraint(m, e4, x[1] - b[6] <= 15.0)
     @constraint(m, e5, x[2] - b[7] <= 5.0)
-    @constraint(m, e6, x[3] - b[8] <= 5.0)
+    @constraint(m, e6, x[3] - b[8] <= 15.0)
     @constraint(m, e7, x[4] - b[9] <= 5.0)
     @constraint(m, e8, b[6] + b[7] + b[8] + b[9] <= 3.0)
 
