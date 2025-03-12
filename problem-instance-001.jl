@@ -3,7 +3,7 @@
 using JuMP, AmplNLWriter
 import Bonmin_jll
 
-global time_limit = 0.1
+global time_limit = 10.0
 
 println("
 ******************************************************************************
