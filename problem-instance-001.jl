@@ -5,6 +5,10 @@ import Bonmin_jll
 
 global time_limit = 10.0
 
+
+using Ipopt
+println(dirname(pathof(Ipopt)))
+
 println("
 ******************************************************************************
 ******************************************************************************
@@ -63,6 +67,7 @@ function adj_problem_instance(solver)
     m = Model(() -> AmplNLWriter.Optimizer(Bonmin_jll.amplexe))
     set_optimizer_attribute(m, "bonmin.algorithm", solver)
     set_optimizer_attribute(m, "bonmin.time_limit", time_limit)
+    set_optimizer_attribute(m, "bonmin.milp_solver", "CPLEX")
 
     # ----- Variables ----- #
     @variable(m, objvar)
@@ -103,14 +108,11 @@ function adj_problem_instance(solver)
 end
 
 
-
-
-
 obj_val_BB, sol_time_BB = problem_instance("B-BB")
 obj_val_OA, sol_time_OA = problem_instance("B-OA")
 
-adj_obj_val_BB, adj_sol_time_BB = adj_problem_instance("B-BB")
-adj_obj_val_OA, adj_sol_time_OA = adj_problem_instance("B-OA")
+# adj_obj_val_BB, adj_sol_time_BB = adj_problem_instance("B-BB")
+# adj_obj_val_OA, adj_sol_time_OA = adj_problem_instance("B-OA")
 
 
 println("Results from original problem:
@@ -120,9 +122,9 @@ sol_time_BB: $sol_time_BB
 sol_time_OA: $sol_time_OA
 ")
 
-println("Results from adjusted problem parameters:
-obj_val_BB: $adj_obj_val_BB
-obj_val_OA: $adj_obj_val_OA
-sol_time_BB: $adj_sol_time_BB
-sol_time_OA: $adj_sol_time_OA
-")
+# println("Results from adjusted problem parameters:
+# obj_val_BB: $adj_obj_val_BB
+# obj_val_OA: $adj_obj_val_OA
+# sol_time_BB: $adj_sol_time_BB
+# sol_time_OA: $adj_sol_time_OA
+# ")

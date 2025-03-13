@@ -1,4 +1,4 @@
-# instances/minlp2/st_e14.jl
+# instances/minlp2/st_el4.jl
 
 using JuMP, AmplNLWriter
 import Bonmin_jll
@@ -113,7 +113,7 @@ function adj_problem_instance(solver)
     @constraint(m, e11, x[5] - b[9] == 0.0)
     @constraint(m, e12, x[6] - b[10] == 0.0)
     @constraint(m, e13, x[7] - b[11] == 0.0)
-    @NLconstraint(m, e14, -((x[4] - 0)^2 + (x[5] - 0)^2 + (x[6] - 0)^2 - log(1 + x[7]) + (x[1] - 1)^2 + (x[2] - 2)^2 + (x[3] - 3)^2) + objvar == 0.0)
+    @NLconstraint(m, e14, -((x[4] - 1)^2 + (x[5] - 2)^2 + (x[6] - 1)^2 - log(1 + x[7]) + (x[1] - 1)^2 + (x[2] - 2)^2 + (x[3] - 3)^2) + objvar == 0.0)
 
 
     # ----- Objective ----- #
@@ -136,23 +136,23 @@ function adj_problem_instance(solver)
 end
 
 
-# obj_val_BB, sol_time_BB = problem_instance("B-BB")
-# obj_val_OA, sol_time_OA = problem_instance("B-OA")
+obj_val_BB, sol_time_BB = problem_instance("B-BB")
+obj_val_OA, sol_time_OA = problem_instance("B-OA")
 
-adj_obj_val_BB, adj_sol_time_BB = adj_problem_instance("B-BB")
-adj_obj_val_OA, adj_sol_time_OA = adj_problem_instance("B-OA")
+# adj_obj_val_BB, adj_sol_time_BB = adj_problem_instance("B-BB")
+# adj_obj_val_OA, adj_sol_time_OA = adj_problem_instance("B-OA")
 
 
-# println("Results from original problem:
-# obj_val_BB: $obj_val_BB
-# obj_val_OA: $obj_val_OA
-# sol_time_BB: $sol_time_BB
-# sol_time_OA: $sol_time_OA
-# ")
-
-println("Results from adjusted problem parameters:
-obj_val_BB: $adj_obj_val_BB
-obj_val_OA: $adj_obj_val_OA
-sol_time_BB: $adj_sol_time_BB
-sol_time_OA: $adj_sol_time_OA
+println("Results from original problem:
+obj_val_BB: $obj_val_BB
+obj_val_OA: $obj_val_OA
+sol_time_BB: $sol_time_BB
+sol_time_OA: $sol_time_OA
 ")
+
+# println("Results from adjusted problem parameters:
+# obj_val_BB: $adj_obj_val_BB
+# obj_val_OA: $adj_obj_val_OA
+# sol_time_BB: $adj_sol_time_BB
+# sol_time_OA: $adj_sol_time_OA
+# ")
