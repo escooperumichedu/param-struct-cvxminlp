@@ -22,10 +22,8 @@ for i = 1:100
 
     C = [3.0, 3.5, 3.2, 3.0, 3.0, 3.0, 1.64, 4.25, 4.64, 0.0, 0.0, 0.0, 0.0]
     k = [80, 30, 80, 80, 100, 100]
-    u = [3, 3, 3, 1.0, 1.0, 1.0, 1.0]
-
-
-
+    u = [3, 3, 3, 1.0, 1.0, 1.0, 1.0]  
+    
     function problem_instance(solver, k, C, u)
 
         m = Model(() -> AmplNLWriter.Optimizer(Bonmin_jll.amplexe))
@@ -83,7 +81,7 @@ for i = 1:100
 
     end
 
-    obj_val_BB, sol_time_BB = problem_instance("B-QG", k, C, u)
+    obj_val_BB, sol_time_BB = problem_instance("B-iFP", k, C, u)
     obj_val_OA, sol_time_OA = problem_instance("B-OA", k, C, u)
 
     obj_val_BB_vec[i] = obj_val_BB

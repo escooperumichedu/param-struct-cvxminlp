@@ -1,31 +1,25 @@
-using JuMP, Plots, Ipopt, NLsolve, AmplNLWriter, Bonmin_jll
-
-global time_limit = 10.0
-solver = "B-OA"
-
-
+using JuMP, Plots, Ipopt, NLsolve, AmplNLWriter, Bonmin_jll, Random
+global time_limit = 30.0
 
 # Parameters
 tau11 = -0.2
 tau22 = -0.3
-tau12 = -20
-tau21 = -30
+tau12 = -10
+tau21 = -10
 k11 = 10
 k22 = 10
 k12 = 0.01
 k21 = 0.015
 M = 1000 # Big-M
 
-x1_sp = 5
+x1_sp = 10
 x2_sp = 10
-u1_sp = 2.8595600676844435
-u2_sp = 1.4043993231807903
 dt = 0.01
 N = 100
 
-u2_price = 50 * rand(N + 1)
+u2_price = 30 * rand(N + 1)
 u3_price = 50 * rand(N + 1)
-min_on_time = 10  # Minimum number of time steps an input must stay on
+min_on_time = 5  # Minimum number of time steps an input must stay on
 
 # Steady-state calculation
 function f(u)
@@ -42,11 +36,10 @@ u1_sp, u2_sp = sol.zero
 
 # MPC solver
 function MPC_solve(solver)
-    mpcmodel = Model(Ipopt.Optimizer)
 
     mpcmodel = Model(() -> AmplNLWriter.Optimizer(Bonmin_jll.amplexe))
     set_optimizer_attribute(mpcmodel, "bonmin.algorithm", solver)
-    set_optimizer_attribute(mpcmodel, "bonmin.time_limit", 10.0)
+    set_optimizer_attribute(mpcmodel, "bonmin.time_limit", time_limit)
 
     # Variables
     JuMP.@variables mpcmodel begin
@@ -64,9 +57,12 @@ function MPC_solve(solver)
         x2_init, x2[0] == 9.0
         energy_source1[k=0:N], u2[k] <= M * (1 - y[k])
         energy_source2[k=0:N], u3[k] <= M * y[k]
-        # Detect switching: z[k] = 1 if y[k] != y[k+1]
-        minimum_on1[k=1:N-min_on_time], sum(y[h] for h=k:k+min_on_time-1) >= min_on_time * (y[k] - y[k-1])
-        minimum_on2[k=1:N-min_on_time], sum(1 - y[h] for h=k:min(N, k+min_on_time-1)) ≥ min(min_on_time, N-k+1) * (y[k-1] - y[k])
+        
+        # Energy sources must stay on for 10 steps
+        # minimum_on1[k=1:N-min_on_time], sum(y[h] for h = k:k+min_on_time-1) >= (min_on_time-1) * (y[k] - y[k-1])
+        # minimum_on2[k=1:N-min_on_time], sum(1 - y[h] for h = k:min(N, k + min_on_time - 1)) >= min((min_on_time-1), N - k + 1) * (y[k-1] - y[k])
+
+
     end
 
     # Dynamics
@@ -86,26 +82,26 @@ function MPC_solve(solver)
     JuMP.optimize!(mpcmodel)
     st = solve_time(mpcmodel)
     # Return results
-    return Array(JuMP.value.(x1)[0:N]), Array(JuMP.value.(x2)[0:N]), Array(JuMP.value.(u1)[0:N]), Array(JuMP.value.(u2)[0:N]), Array(JuMP.value.(u3)[0:N]), st
+    return Array(JuMP.value.(x1)[0:N]), Array(JuMP.value.(x2)[0:N]), Array(JuMP.value.(u1)[0:N]), Array(JuMP.value.(u2)[0:N]), Array(JuMP.value.(u3)[0:N]), Array(JuMP.value.(y)[0:N]), st
 end
 
 # Run MPC
-x1_arr_OA, x2_arr_OA, u1_arr_OA, u2_arr_OA, u3_arr_OA, st_OA = MPC_solve("B-OA")
+x1_arr_OA, x2_arr_OA, u1_arr_OA, u2_arr_OA, u3_arr_OA, y_OA, st_OA = MPC_solve("B-OA")
 
 # Plot results
 times = [k * dt for k = 0:N]
 p1 = plot(times, [x1_arr_OA, x2_arr_OA, u1_arr_OA, u2_arr_OA, u3_arr_OA], layout=(2, 3), label=["x1" "x2" "u1" "u2" "u3"], xlabel="Time", ylabel="Value of variable", size=(800, 500))
 
 # Run MPC
-x1_arr_QG, x2_arr_QG, u1_arr_QG, u2_arr_QG, u3_arr_QG, st_QG = MPC_solve("B-QG")
+x1_arr_iFP, x2_arr_iFP, u1_arr_iFP, u2_arr_iFP, u3_arr_iFP, y_iFP, st_iFP = MPC_solve("B-iFP")
 
 # Plot results
 times = [k * dt for k = 0:N]
-p2 = plot(times, [x1_arr_QG, x2_arr_QG, u1_arr_QG, u2_arr_QG, u3_arr_QG], layout=(2, 3), label=["x1" "x2" "u1" "u2" "u3"], xlabel="Time", ylabel="Value of variable", size=(800, 500))
+p2 = plot(times, [x1_arr_iFP, x2_arr_iFP, u1_arr_iFP, u2_arr_iFP, u3_arr_iFP], color=:red, layout=(2, 3), label=["x1" "x2" "u1" "u2" "u3"], xlabel="Time", ylabel="Value of variable", size=(800, 500))
 
 println("
 OA: $st_OA
-QG: $st_QG
+iFP: $st_iFP
 ")
 
-p = plot(p1, p2, size = (1100, 300))
+p = plot(p1, p2, layout=(2, 1), size=(700, 500))

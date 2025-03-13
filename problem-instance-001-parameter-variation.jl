@@ -20,10 +20,10 @@ sol_time_OA_vec = zeros(100)
 
 for i = 1:100
 
-    k = [4, 3, 3, 6, 10, 8, 9, 12, 7] 
+    k = [4, 3, 3, 6, 10, 8, 9, 12, 7, 8, 9, 12, 7]
     C = [1, 10, 0, 0, 0, 0, 2]
-   
-        
+
+
 
     function problem_instance(solver, k, C)
 
@@ -69,7 +69,7 @@ for i = 1:100
 
     end
 
-    obj_val_BB, sol_time_BB = problem_instance("B-QG", k, C)
+    obj_val_BB, sol_time_BB = problem_instance("B-iFP", k, C)
     obj_val_OA, sol_time_OA = problem_instance("B-OA", k, C)
 
     obj_val_BB_vec[i] = obj_val_BB
