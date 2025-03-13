@@ -67,7 +67,6 @@ function adj_problem_instance(solver)
     m = Model(() -> AmplNLWriter.Optimizer(Bonmin_jll.amplexe))
     set_optimizer_attribute(m, "bonmin.algorithm", solver)
     set_optimizer_attribute(m, "bonmin.time_limit", time_limit)
-    set_optimizer_attribute(m, "bonmin.milp_solver", "CPLEX")
 
     # ----- Variables ----- #
     @variable(m, objvar)
