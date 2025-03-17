@@ -1,10 +1,9 @@
 # instances/minlp2/alan.jl
 
-using JuMP, AmplNLWriter
+using JuMP, AmplNLWriter, BARON
 import Bonmin_jll
 
 global time_limit = 10.0
-
 
 using Ipopt
 println(dirname(pathof(Ipopt)))
