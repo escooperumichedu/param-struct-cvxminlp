@@ -6,7 +6,7 @@ ball_mk3_20
 ball_mk3_30
 ball_mk4_05
 ball_mk4_10
-ball mk4_15
+ball_mk4_15
 batch
 batch0812
 batchdes
@@ -26,16 +26,16 @@ clay0304h
 clay0304m
 clay0305h
 clay0305m
-cvxnonsepnormcon20
-cvxnonsepnormcon20r
-cvxnonsepnormcon30
-cvxnonsepnormcon30r
-cvxnonsepnormcon40
-cvxnonsepnormcon40r
+cvxnonsep_normcon20
+cvxnonsep_normcon20r
+cvxnonsep_normcon30
+cvxnonsep_normcon30r
+cvxnonsep_normcon40
+cvxnonsep_normcon40r
 cvxnonsep_nsig20
-cvxnonsep nsig20r
-cvxnonsep_nsig30 
-cvxnonsep_nsig30r 
+cvxnonsep_nsig20r
+cvxnonsep_nsig30
+cvxnonsep_nsig30r
 cvxnonsep_nsig40
 cvxnonsep_nsig40r
 cvxnonsep_pcon20
@@ -47,12 +47,12 @@ cvxnonsep_pcon40r
 cvxnonsep_psig20
 cvxnonsep_psig20r
 cvxnonsep_psig30
-cvxnonsep_psig30r 
+cvxnonsep_psig30r
 cvxnonsep_psig40
 cvxnonsep_psig40r
 du-opt
 du-opt5
-enpro48p
+enpro48pb
 enpro56pb
 ex1223
 ex1223a
@@ -77,14 +77,14 @@ fo7_ar2_1
 fo7_ar25_1
 fo7_ar3_1
 fo7_ar4_1
-fo7_ar5.1
-f08
+fo7_ar5_1
+fo8
 fo8_ar2_1
 fo8_ar25_1
 fo8_ar3_1
 fo8_ar4_1
 fo8_ar5_1
-f09
+fo9
 fo9_ar2_1
 fo9_ar25_1
 fo9_ar3_1
@@ -94,7 +94,7 @@ gams01
 gbd
 hybriddynamic_fixed
 ibs2
-jiti
+jit1
 m3
 m6
 m7

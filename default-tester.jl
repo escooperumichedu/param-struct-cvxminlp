@@ -7,7 +7,7 @@ dir_instances = "C:\\Users\\goson\\Desktop\\git\\param-struct-cvxminlp\\instance
 instances = CSV.read(dir_instances, DataFrame, header=false)
 
 # results = zeros(366, 4)
-for i = 4:366
+for i = 108:366
     prob = instances[i, 1]
 
     println("
@@ -45,7 +45,7 @@ for i = 4:366
             if status == MOI.INFEASIBLE || status == MOI.INFEASIBLE_OR_UNBOUNDED
                 println("Problem is infeasible. Skipping objective value retrieval.")
                 return 1e12, sol  # Return a large value to indicate infeasibility
-            elseif sol >= time_limit
+            elseif sol >= (time_limit - 1.0)
                 return 1e12, sol  # Return a large value if time limit is reached
             else
                 return objective_value(m), sol
@@ -66,6 +66,6 @@ for i = 4:366
     results[i, 3] = sol_time_OA
     results[i, 4] = obj_val_OA
 end
-
+results[97,1]
 df_results = DataFrame(results, :auto)
-CSV.write("results-from-tmax-025.csv", df_results)
+CSV.write("results-from-tmax-025-6-instance.csv", df_results)
