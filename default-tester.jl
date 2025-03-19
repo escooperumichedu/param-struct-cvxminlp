@@ -1,13 +1,13 @@
 using JuMP, AmplNLWriter, BARON, CSV, DataFrames, Statistics
 import Bonmin_jll
-global time_limit = 90.0
+global time_limit = 360.0
 
-dir_instances = "C:\\Users\\goson\\Desktop\\git\\param-struct-cvxminlp\\instances-default.csv"
+dir_instances = "C:\\Users\\goson\\Desktop\\git\\param-struct-cvxminlp\\instances-2.csv"
 
 instances = CSV.read(dir_instances, DataFrame, header=false)
 
-# results = zeros(366, 4)
-for i = 362:366
+results = zeros(285, 4)
+for i = 1:285
     prob = instances[i, 1]
 
     println("
@@ -69,4 +69,4 @@ end
 
 results[310,1]
 df_results = DataFrame(results, :auto)
-CSV.write("results-from-tmax-025-12-instance.csv", df_results)
+CSV.write("results-from-tmax-025-test-instance-360sec.csv", df_results)
