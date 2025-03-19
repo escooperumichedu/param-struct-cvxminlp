@@ -7,7 +7,7 @@ dir_instances = "C:\\Users\\goson\\Desktop\\git\\param-struct-cvxminlp\\instance
 instances = CSV.read(dir_instances, DataFrame, header=false)
 
 # results = zeros(366, 4)
-for i = 108:366
+for i = 362:366
     prob = instances[i, 1]
 
     println("
@@ -66,6 +66,7 @@ for i = 108:366
     results[i, 3] = sol_time_OA
     results[i, 4] = obj_val_OA
 end
-results[97,1]
+
+results[310,1]
 df_results = DataFrame(results, :auto)
-CSV.write("results-from-tmax-025-6-instance.csv", df_results)
+CSV.write("results-from-tmax-025-12-instance.csv", df_results)
