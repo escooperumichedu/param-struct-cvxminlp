@@ -1,6 +1,6 @@
 using JuMP, AmplNLWriter, BARON, CSV, DataFrames, Statistics
 import Bonmin_jll
-global time_limit = 360.0
+global time_limit = 300.0
 
 dir_instances = "C:\\Users\\goson\\Desktop\\git\\param-struct-cvxminlp\\instances-2.csv"
 
