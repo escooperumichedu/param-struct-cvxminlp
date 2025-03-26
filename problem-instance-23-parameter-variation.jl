@@ -115,17 +115,17 @@ for i = 1:1
         set_lower_bound(x[70], 0.0)
         set_lower_bound(x[65], 0.0)
         set_lower_bound(x[1], 11.5)
-        set_upper_bound(x[1], 502.5)
+        set_upper_bound(x[1], 52.5)
         set_lower_bound(x[2], 12.5)
-        set_upper_bound(x[2], 501.5)
+        set_upper_bound(x[2], 51.5)
         set_lower_bound(x[3], 10.5)
-        set_upper_bound(x[3], 503.5)
+        set_upper_bound(x[3], 53.5)
         set_lower_bound(x[4], 7.0)
-        set_upper_bound(x[4], 800.0)
+        set_upper_bound(x[4], 82.0)
         set_lower_bound(x[5], 6.5)
-        set_upper_bound(x[5], 800.5)
+        set_upper_bound(x[5], 82.5)
         set_lower_bound(x[6], 5.5)
-        set_upper_bound(x[6], 800.5)
+        set_upper_bound(x[6], 83.5)
 
 
         # ----- Constraints ----- #

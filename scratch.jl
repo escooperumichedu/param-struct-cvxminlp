@@ -1,32 +1,31 @@
-using JuMP, AmplNLWriter, BARON
-import Bonmin_jll
+using JuMP
 
-time_limit = 60.0
+m = Model()
 
-# m = Model(() -> AmplNLWriter.Optimizer(Bonmin_jll.amplexe))
-# set_optimizer_attribute(m, "bonmin.algorithm", "B-OA")
-# set_optimizer_attribute(m, "bonmin.time_limit", time_limit)
-
-m = Model(BARON.Optimizer)
-
+u = [1.0e15, 1.0, 2.0]
+C = [16.0, 1.0, 24.0, 12.0, 3.0]
+k = [2, 8, 3, 5, 4, 0.5, 0.2, 0.1]
+k_obj = [0.5 6.5 7 2 3 2]
 # ----- Variables ----- #
 @variable(m, objvar)
-i_Idx = Any[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-@variable(m, i[i_Idx] <= 100, Int)
+i_Idx = Any[1, 2, 3, 4, 5, 6]
+@variable(m, i[i_Idx], Int)
+set_upper_bound(i[1], u[1])
+set_upper_bound(i[2], u[1])
+set_upper_bound(i[3], u[1])
+set_upper_bound(i[4], u[2])
+set_upper_bound(i[5], u[2])
+set_upper_bound(i[6], u[3])
 
 
 # ----- Constraints ----- #
-@constraint(m, e1, 8*i[1]+7*i[2]+9*i[3]+9*i[5]+8*i[6]+2*i[7]+4*i[9]+i[10] <= 530.0)
-@constraint(m, e2, 3*i[1]+4*i[2]+6*i[3]+9*i[4]+6*i[6]+9*i[7]+i[8]+i[10] <= 395.0)
-@constraint(m, e3, 2*i[2]+i[3]+5*i[4]+5*i[5]+7*i[7]+4*i[8]+2*i[9] <= 350.0)
-@constraint(m, e4, 5*i[1]+7*i[3]+i[4]+7*i[5]+5*i[6]+7*i[8]+9*i[9]+5*i[10] <= 405.0)
-@constraint(m, e5, i[1]+i[2]+i[3]+i[4]+i[5]+i[6]+i[7]+i[8]+i[9]+i[10] <= 200.0)
-@NLconstraint(m, e6, -(0.00055*i[1]*i[1]-0.0583*i[1]+0.0019*i[2]*i[2]+0.2318*i[2]+0.0002*i[3]*i[3]-0.0108*i[3]+0.00095*i[4]*i[4]+0.1634*i[4]+0.0046*i[5]*i[5]-0.138*i[5]+0.0035*i[6]*i[6]+0.357*i[6]+0.00315*i[7]*i[7]-0.1953*i[7]+0.00475*i[8]*i[8]-0.361*i[8]+0.0048*i[9]*i[9]+0.1824*i[9]+0.003*i[10]*i[10]-0.162*i[10])+objvar == 0.0)
+@constraint(m, e1, i[1]+k[1]*i[2]+k[2]*i[3]+i[4]+k[3]*i[5]+k[4]*i[6] <= C[1])
+@constraint(m, e2, -k[2]*i[1]-k[5]*i[2]-k[1]*i[3]+k[1]*i[4]+k[5]*i[5]-i[6] <= -C[2])
+@constraint(m, e3, k[1]*i[1]+k[6]*i[2]+k[7]*i[3]-k[3]*i[4]-i[5]-k[5]*i[6] <= C[3])
+@constraint(m, e4, k[7]*i[1]+k[1]*i[2]+k[8]*i[3]-k[5]*i[4]+k[1]*i[5]+k[1]*i[6] <= C[4])
+@constraint(m, e5, -k[8]*i[1]-k[6]*i[2]+k[1]*i[3]+k[4]*i[4]-k[4]*i[5]+k[3]*i[6] <= C[5])
+@NLconstraint(m, e6, -(k_obj[1]*i[1]*i[1]+k_obj[2]*i[1]+k_obj[3]*i[6]*i[6]-i[6])+i[2]+k_obj[4]*i[3]-k_obj[5]*i[4]+k_obj[6]*i[5]+objvar == 0.0)
 
 
 # ----- Objective ----- #
 @objective(m, Min, objvar)
-
-optimize!(m)
-println("Optimal Objective Value: ", objective_value(m))
-println("Solution Time: ", solve_time(m), " seconds")
